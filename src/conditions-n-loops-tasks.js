@@ -139,8 +139,8 @@ function isIsoscelesTriangle(a, b, c) {
 function convertToRomanNumerals(num) {
   let result = '';
 
-  const countOfX = num % 10;
-  const countOfV = (num - countOfX) % 5;
+  const countOfX = Math.floor(num / 10);
+  const countOfV = Math.floor((num - countOfX) / 5);
   const countOfI = num - (countOfX + countOfV);
 
   for (let i = 0; i < countOfX; i += 1) {
@@ -173,8 +173,56 @@ function convertToRomanNumerals(num) {
  *  '10,5'    => 'one zero point five'
  *  '1950.2'  => 'one nine five zero point two'
  */
-function convertNumberToString(/* numberStr */) {
-  throw new Error('Not implemented');
+function convertNumberToString(numberStr) {
+  let result = '';
+
+  for (let i = 0; i < numberStr.length; i += 1) {
+    let str;
+    switch (numberStr[i]) {
+      case '1':
+        str = 'one';
+        break;
+      case '2':
+        str = 'two';
+        break;
+      case '3':
+        str = 'three';
+        break;
+      case '4':
+        str = 'four';
+        break;
+      case '5':
+        str = 'five';
+        break;
+      case '6':
+        str = 'six';
+        break;
+      case '7':
+        str = 'seven';
+        break;
+      case '8':
+        str = 'eight';
+        break;
+      case '9':
+        str = 'nine';
+        break;
+      case '0':
+        str = 'zero';
+        break;
+      case '-':
+        str = 'minus';
+        break;
+      case '.':
+      case ',':
+        str = 'point';
+        break;
+      default:
+        str = '';
+    }
+    const nextString = i === numberStr.length - 1 ? str : `${str} `;
+    result += nextString;
+  }
+  return result;
 }
 
 /**
@@ -189,8 +237,20 @@ function convertNumberToString(/* numberStr */) {
  *  '0123210'   => true
  *  'qweqwe'    => false
  */
-function isPalindrome(/* str */) {
-  throw new Error('Not implemented');
+function isPalindrome(str) {
+  let left = 0;
+  let right = str.length - 1;
+
+  while (left <= right) {
+    if (str[left] === str[right]) {
+      left += 1;
+      right -= 1;
+    } else {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 /**
@@ -208,10 +268,8 @@ function isPalindrome(/* str */) {
  *  'qwerty', 'p'     => -1
  */
 function getIndexOf(str, letter) {
-  const arrOfChars = str.split('');
-
-  for (let i = 0; i < arrOfChars.length; i += 1) {
-    if (arrOfChars[i] === letter) {
+  for (let i = 0; i < str.length; i += 1) {
+    if (str[i] === letter) {
       return i;
     }
   }
