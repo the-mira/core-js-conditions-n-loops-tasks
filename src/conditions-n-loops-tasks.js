@@ -122,37 +122,52 @@ function isIsoscelesTriangle(a, b, c) {
   );
 }
 
-/**
- * Converts a number to Roman numerals. The number will be between 1 and 39.
- * In this task, the use of methods of the String and Array classes is not allowed.
- *
- * @param {number} num - The number to convert.
- * @return {string} The Roman numeral representation of the number.
- *
- * @example:
- *  1   => I
- *  2   => II
- *  5   => V
- *  10  => X
- *  26  => XXVI
- */
 function convertToRomanNumerals(num) {
   let result = '';
 
   const countOfX = Math.floor(num / 10);
-  const countOfV = Math.floor((num - countOfX) / 5);
-  const countOfI = num - (countOfX + countOfV);
-
-  for (let i = 0; i < countOfX; i += 1) {
+  if (countOfX === 9) {
     result += 'X';
-  }
-
-  for (let i = 0; i < countOfV; i += 1) {
-    result += 'V';
-  }
-
-  for (let i = 0; i < countOfI; i += 1) {
+    result += 'X';
     result += 'I';
+  } else if (countOfX >= 5) {
+    result += 'X';
+    let remainingX = countOfX - 5;
+    while (remainingX > 0) {
+      result += 'X';
+      remainingX -= 1;
+    }
+  } else if (countOfX === 4) {
+    result += 'X';
+    result += 'I';
+  } else {
+    let remainingX = countOfX;
+    while (remainingX > 0) {
+      result += 'X';
+      remainingX -= 1;
+    }
+  }
+
+  const countOfI = num % 10;
+  if (countOfI === 9) {
+    result += 'I';
+    result += 'X';
+  } else if (countOfI >= 5) {
+    result += 'V';
+    let remainingI = countOfI - 5;
+    while (remainingI > 0) {
+      result += 'I';
+      remainingI -= 1;
+    }
+  } else if (countOfI === 4) {
+    result += 'I';
+    result += 'V';
+  } else {
+    let remainingI = countOfI;
+    while (remainingI > 0) {
+      result += 'I';
+      remainingI -= 1;
+    }
   }
 
   return result;
@@ -293,12 +308,14 @@ function getIndexOf(str, letter) {
  */
 function isContainNumber(num, digit) {
   let number = num;
+
   while (number > 0) {
     const lastDigit = number - (number - Math.floor(number % 10));
-    console.log(lastDigit);
+
     if (lastDigit === digit) {
       return true;
     }
+
     number = Math.floor(number / 10);
   }
 
@@ -318,8 +335,29 @@ function isContainNumber(num, digit) {
  *  [2, 3, 9, 5] => 2       => 2 + 3 === 5 then balance element is 9 and its index = 2
  *  [1, 2, 3, 4, 5] => -1   => no balance element
  */
-function getBalanceIndex(/* arr */) {
-  throw new Error('Not implemented');
+function getBalanceIndex(arr) {
+  if (arr.length <= 2) {
+    return -1;
+  }
+
+  let leftSum = 0;
+  let rightSum = 0;
+
+  for (let i = 0; i < arr.length; i += 1) {
+    rightSum += arr[i];
+  }
+
+  for (let i = 0; i < arr.length; i += 1) {
+    rightSum -= arr[i];
+
+    if (leftSum === rightSum) {
+      return i;
+    }
+
+    leftSum += arr[i];
+  }
+
+  return -1;
 }
 
 /**
@@ -380,8 +418,41 @@ function rotateMatrix(/* matrix */) {
  *  [2, 9, 5, 9]    => [2, 5, 9, 9]
  *  [-2, 9, 5, -3]  => [-3, -2, 5, 9]
  */
-function sortByAsc(/* arr */) {
-  throw new Error('Not implemented');
+function partition(arr, start, end) {
+  const copyArr = arr;
+
+  const pivot = arr[end];
+
+  let idx = start - 1;
+
+  for (let i = start; i < end; i += 1) {
+    if (arr[i] <= pivot) {
+      idx += 1;
+      const temp = arr[i];
+      copyArr[i] = arr[idx];
+      copyArr[idx] = temp;
+    }
+  }
+
+  idx += 1;
+  copyArr[end] = arr[idx];
+  copyArr[idx] = pivot;
+  return idx;
+}
+
+function quickSort(arr, start, end) {
+  if (start >= end) {
+    return;
+  }
+
+  const pivotIndex = partition(arr, start, end);
+
+  quickSort(arr, start, pivotIndex - 1);
+  quickSort(arr, pivotIndex + 1, end);
+}
+
+function sortByAsc(arr) {
+  quickSort(arr, 0, arr.length - 1);
 }
 
 /**
@@ -401,8 +472,25 @@ function sortByAsc(/* arr */) {
  *  '012345', 3 => '024135' => '043215' => '031425'
  *  'qwerty', 3 => 'qetwry' => 'qtrewy' => 'qrwtey'
  */
-function shuffleChar(/* str, iterations */) {
-  throw new Error('Not implemented');
+function shuffleChar(str, iterations) {
+  let newStr = str;
+  for (let i = 0; i < iterations; i += 1) {
+    let iterationStr = '';
+    for (let j = 0; j < newStr.length; j += 1) {
+      if (j % 2 === 0) {
+        iterationStr += newStr[j];
+      }
+    }
+
+    for (let j = 0; j < newStr.length; j += 1) {
+      if (j % 2 !== 0) {
+        iterationStr += newStr[j];
+      }
+    }
+    newStr = iterationStr;
+  }
+
+  return newStr;
 }
 
 /**
